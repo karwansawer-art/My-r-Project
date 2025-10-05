@@ -1,4 +1,4 @@
-name: Persistent RDP (v13.1 - Syntax Fix)
+name: The Final RDP (v14 - Service Account Fix)
 on:
   workflow_dispatch:
 
@@ -35,7 +35,7 @@ jobs:
           choco install -y googlechrome vscode 7zip rclone
 
       - name: Setup Rclone and Download
-        if: env.RCLONE_SA_JSON
+        if: secrets.RCLONE_SA_JSON
         env:
           RCLONE_SA_JSON: ${{ secrets.RCLONE_SA_JSON }}
         run: |
@@ -43,7 +43,6 @@ jobs:
           $rcloneConfig = @"
 [gdrive]
 type = drive
-scope = drive
 service_account_file = C:\Users\runneradmin\sa.json
 "@
           $configPath = "$env:APPDATA\rclone\rclone.conf"
@@ -82,7 +81,7 @@ service_account_file = C:\Users\runneradmin\sa.json
           }
 
       - name: Upload Files to Cloud
-        if: always() && env.RCLONE_SA_JSON
+        if: always() && secrets.RCLONE_SA_JSON
         env:
           RCLONE_SA_JSON: ${{ secrets.RCLONE_SA_JSON }}
         run: |
